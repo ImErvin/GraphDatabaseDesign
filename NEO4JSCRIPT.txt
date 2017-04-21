@@ -1,0 +1,98 @@
+CREATE 
+(sd:Course {name:"SOFTWARE DEVELOPMENT"}),
+(sdsem6:Semester {name:"SD SEM6"}),
+(sdian:Staff {name:"IAN MCL."}),
+(sdmartin:Staff {name:"MARTIN H."}),
+(sddeirdre:Staff {name:"DEIRDRE OD."}),
+(sdpatrick:Staff {name:"PATRICK M."}),
+(sddamien:Staff {name:"DAMIEN C."}),
+(sdgerard:Staff {name:"GERARD H."}),
+(sd0994:Room {name:"0994"}),
+(sd0223:Room {name:"0223"}),
+(sdPF05:Room {name:"PF05"}),
+(sd0481:Room {name:"0481 CR4"}),
+(sd0436:Room {name:"0436 CR5"}),
+(sd0482:Room {name:"0482 CR3"}),
+(sd0470:Room {name:"0470"}),
+(sd0379:Room {name:"0379"}),
+(sd0162:Room {name:"0162"}),
+(sd0938:Room {name:"0938"}),
+(sd0208:Room {name:"0208"}),
+(sd0997:Room {name:"0997"}),
+(sd0939:Room {name:"0939"}),
+(sd0995:Room {name:"0995"}),
+(sdPF18:Room {name:"PF18"}),
+(mon:Day {name:"MONDAY"}),
+(tue:Day {name:"TUESDAY"}),
+(wen:Day {name:"WEDNESDAY"}),
+(thu:Day {name:"THURSDAY"}),
+(fri:Day {name:"FRIDAY"}),
+(sdst:Module {name:"SOFTWARE TESTING"}),
+(sdmad:Module {name:"MOBILE APP DEV."}),
+(sddms:Module {name:"DATABASE MGMT SYS."}),
+(sdgt:Module {name:"GRAPH THEORY"}),
+(sdssr:Module {name:"SERVER SIDE RAD"}),
+(sdpsit:Module {name:"PROF. SKILLS"}),
+
+(sd)-[:HAS_SEMESTER]->(sdsem6),
+
+(sdsem6)-[:HAS_MODULE]->(sdst),
+(sdsem6)-[:HAS_MODULE]->(sdmad),
+(sdsem6)-[:HAS_MODULE]->(sddms),
+(sdsem6)-[:HAS_MODULE]->(sdgt),
+(sdsem6)-[:HAS_MODULE]->(sdssr),
+(sdsem6)-[:HAS_MODULE]->(sdpsit),
+
+(sdmartin)-[:TEACHES]->(sdst),
+(sddamien)-[:TEACHES]->(sdmad),
+(sddeirdre)-[:TEACHES]->(sddms),
+(sdpatrick)-[:TEACHES]->(sddms),
+(sdian)-[:TEACHES]->(sdgt),
+(sdgerard)-[:TEACHES]->(sdssr),
+(sddamien)-[:TEACHES]->(sdpsit),
+
+(sdst)-[:THOUGHT_IN {day:mon.name, type:"P", duration:"2", group:"A"}]->(sd0481)-[:THOUGHT_ON {time:"16:00", group:"A"}]->(mon),
+
+(sdst)-[:THOUGHT_IN {day:tue.name,type:"P", duration:"2",  group:"C"}]->(sd0436)-[:THOUGHT_ON {time:"09:00", group:"C"}]->(tue),
+
+(sdst)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"2",  group:"B"}]->(sd0436)-[:THOUGHT_ON {time:"14:00", group:"B"}]->(tue),
+
+(sdst)-[:THOUGHT_IN {day:wen.name, type:"L", duration:"1",  group:"ALL"}]->(sd0939)-[:THOUGHT_ON {time:"15:00", group:"ALL"}]->(wen),
+
+(sdmad)-[:THOUGHT_IN {day:mon.name, type:"L", duration:"2",  group:"ALL"}]->(sd0223)-[:THOUGHT_ON {time:"12:00", group:"ALL"}]->(mon),
+
+(sdmad)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"2",  group:"A"}]->(sd0470)-[:THOUGHT_ON {time:"11:00", group:"A"}]->(tue),
+
+(sdmad)-[:THOUGHT_IN {day:thu.name, type:"P", duration:"2",  group:"B"}]->(sdPF18)-[:THOUGHT_ON {time:"09:00", group:"B"}]->(thu),
+
+(sdmad)-[:THOUGHT_IN {day:thu.name, type:"P", duration:"2", group:"C"}]->(sdPF18)-[:THOUGHT_ON {time:"11:00", group:"C"}]->(thu),
+
+(sdgt)-[:THOUGHT_IN {day:mon.name, type:"P", duration:"1", group:"A"}]->(sdPF05)-[:THOUGHT_ON {time:"14:00", group:"A"}]->(mon),
+
+(sdgt)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"1", group:"B"}]->(sd0379)-[:THOUGHT_ON {time:"12:00", group:"B"}]->(tue),
+
+(sdgt)-[:THOUGHT_IN {day:wen.name, type:"P", duration:"1", group:"C"}]->(sd0162)-[:THOUGHT_ON {time:"09:00", group:"C"}]->(wen),
+
+(sdgt)-[:THOUGHT_IN {day:wen.name, type:"L", duration:"1", group:"ALL"}]->(sd0938)-[:THOUGHT_ON {time:"10:00", group:"ALL"}]->(wen),
+
+(sdgt)-[:THOUGHT_IN {day:fri.name, type:"L", duration:"1", group:"ALL"}]->(sd0208)-[:THOUGHT_ON {time:"11:00", group:"ALL"}]->(fri),
+
+(sdssr)-[:THOUGHT_IN {day:mon.name, type:"P", duration:"2", group:"C"}]->(sd0436)-[:THOUGHT_ON {time:"16:00", group:"C"}]->(mon),
+
+(sdssr)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"2", group:"B"}]->(sd0436)-[:THOUGHT_ON {time:"16:00", group:"B"}]->(tue),
+
+(sdssr)-[:THOUGHT_IN {day:wen.name, type:"L", duration:"1", group:"ALL"}]->(sd0997)-[:THOUGHT_ON {time:"13:00", group:"ALL"}]->(wen),
+
+(sdssr)-[:THOUGHT_IN {day:thu.name, type:"L", duration:"1", group:"A"}]->(sd0436)-[:THOUGHT_ON {time:"14:00", group:"A"}]->(thu),
+
+(sddms)-[:THOUGHT_IN {day:mon.name, type:"L", duration:"1", group:"ALL"}]->(sd0994)-[:THOUGHT_ON {time:"10:00", group:"ALL"}]->(mon),
+
+(sddms)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"2", group:"A"}]->(sd0481)-[:THOUGHT_ON {time:"09:00", group:"A"}]->(tue),
+
+(sddms)-[:THOUGHT_IN {day:tue.name, type:"P", duration:"2", group:"C"}]->(sd0482)-[:THOUGHT_ON {time:"11:00", group:"C"}]->(tue),
+
+(sddms)-[:THOUGHT_IN {day:wen.name, type:"L", duration:"1", group:"ALL"}]->(sd0995)-[:THOUGHT_ON {time:"16:00", group:"ALL"}]->(wen),
+
+(sddms)-[:THOUGHT_IN {day:fri.name, type:"P", duration:"2", group:"B"}]->(sd0482)-[:THOUGHT_ON {time:"09:00", group:"B"}]->(fri),
+
+(sdpsit)-[:THOUGHT_IN {day:wen.name, type:"L", duration:"1", group:"ALL"}]->(sd0208)-[:THOUGHT_ON {time:"11:00", group:"ALL"}]->(wen)
