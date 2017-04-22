@@ -300,8 +300,16 @@ RETURN a,b,c,r,t;
 ```
 
 ## Conclusion
-...
+Starting this project I spent a large amount of time trying to automate the process to create node relationships, by setting properties to each node and using where clauses to create relationships. This hit a dead end once trying to get my head around what sort of properties each room/day/group node would need to create a specific relationship. I wanted to automate the process so it would effienctly parse the whole timetabling system and create.
 
+I decided to manually write my own relationships after constant failure. This process was tedious and I figured the best way to do it was to keep it in a .txt document and constantly paste the nodes/relationships in and test them. Writing the .txt document I found myself constantly using the same formula for each module-room-day relationship. 
+```
+(module)-[r:THOUGHT_IN {day:day.name, type:"P or L", duration:"1 or 2", group:"A, B or C"]->(room)-[t:THOUGHT_ON {time:"between 09:00-17:00", group:r.group}]->(day).
+```
+All of the properties and nodes are extracted directly from the web timetables [7].
+
+I've learned a lot about graph databases and the power of graph databases while doing this project. I would definitely consider neo4j for future projects, really enjoyed with Neo4j especially when it is presented in such a readable manner like a graph.
+If I were to go back and do this project again with the knowledge I have now, I would write a script in C or Java that would simply parse a file of raw data (mined from the web timetables [7]) and use that extra layer of programming logic to extract node information such as rooms,days,lecturers etc. Once that information is extracted I could build a cypher query to create nodes and to create relationships between them. The output of the script would be similar to my script [8].
 ## References
 [1] Neo4j - [why graph databases?](https://neo4j.com/why-graph-databases/)
 
