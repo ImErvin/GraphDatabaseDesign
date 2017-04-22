@@ -1,8 +1,8 @@
 # Neo4j Graph Database Design Document
-###### By Ervin Mamutov
+###### Contributor(s): Ervin Mamutov
 
-### The Spec
->You are required to design and prototype a Neo4j database for use in a timetabling system for a third level institute like GMIT. The database should store information about student groups, classrooms, lecturers, and work hours just like the currently used timetabling system at GMIT.
+### The Aim
+My sole aim of this project was to get a better understanding of Graph Databases and Neo4j in particular, all while meeting the requirements on my project spec [9]. In this repository you will find, a zip file with my database prototype and the design document (which you are currently reading). This repository could come in handy for anyone working on a timetabling system with graph databases, or simply starting out with Neo4j and want an example database to work with.
 
 ## Graph Databases
 ### What are Graph Databases?
@@ -276,6 +276,7 @@ WHERE r.duration="2"
 RETURN r.day as day, count(r) as No_Of_2hour_lessons
 ORDER BY No_Of_2hour_lessons DESC;
 ```
+![Interesting Query 1](https://github.com/ImErvin/Neo4jTimetable/blob/master/images/InterestingQuery1.png?raw=true)
 
 To retrieve the day with the most 1 hour lessons:
 ```cypher
@@ -284,13 +285,15 @@ WHERE r.duration="1"
 RETURN r.day as day, count(r) as No_Of_1hour_lessons
 ORDER BY No_Of_1hour_lessons DESC LIMIT 1;
 ```
+![Interesting Query 2](https://github.com/ImErvin/Neo4jTimetable/blob/master/images/InterestingQuery2.png?raw=true)
 
 To retrieve which room is used the most:
 ```cypher
 MATCH (a)-[r:THOUGHT_IN]->(b)
-RETURN b, count(r) as TimesUsed
+RETURN b.name as Room, count(r) as TimesUsed
 ORDER by TimesUsed DESC LIMIT 1;
 ```
+![Interesting Query 3](https://github.com/ImErvin/Neo4jTimetable/blob/master/images/InterestingQuery3.png?raw=true)
 
 To retrieve Group A's labs and lectures for the week:
 ```cypher
@@ -298,6 +301,7 @@ MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c)
 WHERE r.group = "A" and t.group = r.group or r.group="ALL" and t.group=r.group
 RETURN a,b,c,r,t;
 ```
+![Interesting Query 4](https://github.com/ImErvin/Neo4jTimetable/blob/master/images/InterestingQuery4.png?raw=true)
 
 ## Conclusion
 Starting this project I spent a large amount of time trying to automate the process to create node relationships, by setting properties to each node and using where clauses to create relationships. This hit a dead end once trying to get my head around what sort of properties each room/day/group node would need to create a specific relationship. I wanted to automate the process so it would effienctly parse the whole timetabling system and create.
@@ -318,7 +322,10 @@ If I were to go back and do this project again with the knowledge I have now, I 
   * Open Neo4j and change the database location to the unzipped Neo4jTT folder.
   * Once your database location is set to \Neo4jTT press Start.
   * Open http://localhost:7474/.
-  * When prompted to login. Username: neo4j Password: password
+  * Login Credentials:
+  
+    Username: neo4j <br/>
+    Password: password
 
 ## References
 [1] Neo4j - [why graph databases?](https://neo4j.com/why-graph-databases/)
@@ -336,3 +343,5 @@ If I were to go back and do this project again with the knowledge I have now, I 
 [7] GMIT - [web timetables](http://timetable.gmit.ie/)
 
 [8] GitHub - [neo4jscript.txt](https://github.com/ImErvin/Neo4jTimetable/blob/master/NEO4JSCRIPT.txt)
+
+[9] GitHub - [project spec](https://github.com/ImErvin/Neo4jTimetable/blob/master/pdfs/projectNeo4j.pdf)
