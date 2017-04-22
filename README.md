@@ -89,7 +89,9 @@ These are the nodes I have implemented in my prototype but ideally if I were to 
 I added properties to the last 2 relationships in the list above to better query the database. I ran into a problem where when I wanted to see what modules were thought on a Monday, it would show me all modules connected to the rooms that are connected to Monday, i.e if Graph Theory was using room 0995 on a Friday, that relationship would show up on my Monday query because Software Testing was using room 0995 on a Monday. 
     
 This issue also happened when I used Time as a node, so I decided to make Time a relationship property for THOUGHT_ON and day a relationship property for THOUGHT_IN.
-    
+
+The direction of these relationships is set in a way where I can query a specific flow, i.e: Query which lecturer teaches what module in which room on what day or which semester has a module named "Graph Theory".
+
 Ideally if I were to add the department and campus nodes, I would need two more relationships to connect campus to department and department to course.
 ### Diagram
     
@@ -108,9 +110,8 @@ I simply extracted the data from GMIT's web timetables [7] by using their UI to 
 ## CRUD Queries
 A simple API on how to work with my prototype.
 ### Create
-**General Queries**
 
-To create a new node use:
+To create a new node:
 ```cypher
 CREATE (a:NodeLabel {name:"Name Value"})
 ```
@@ -118,7 +119,7 @@ CREATE (a:NodeLabel {name:"Name Value"})
    * NodeLabel refers to the Node label. Use node labels mentioned above (under nodes). E.g: Use :Course if creating a new course.
    * name refers to the single property every node has in my prototype.
    
-To create a new relationship use:
+To create a new relationship:
 ```cypher
 CREATE (a)-[:RELATIONSHIP_LABEL {propertyName1:"property value1", propertyName2:"property value2"}]->(b)
 ```
@@ -126,50 +127,177 @@ CREATE (a)-[:RELATIONSHIP_LABEL {propertyName1:"property value1", propertyName2:
    * RELATIONSHIP_LABEL refers to the relationship label. Use relationship labels mentioned above (under relationships). E.g: use :HAS_SEMESTER if connecting a course node to a semester node.
    * propertyName refers to any property a relationship may have. Use this if the relationship you're creating has properties. E.g: when using :THOUGHT_ON , You will need to specify the time and group properties.
 
-**Interesting Queries**
-
 Keep in mind you could create several relationships at once:
 ```cypher
 CREATE (sdst)-[:THOUGHT_IN {day:mon.name, type:"P", duration:"2", group:"A"}]->(sd0481)-[:THOUGHT_ON {time:"16:00", group:"A"}]->(mon)
 ```
 ### Retrieve
-**General Queries**
 
-To retrieve all of the nodes and relationships use:
+To retrieve all of the nodes and relationships:
 ```cypher
 MATCH (x)
 RETURN x;
 ```
-To retrieve all of the nodes of one type use:
+  * MATCH is used to find a node/relationship.
+  * RETURN is used to display what was found during the MATCH.
+  
+To retrieve all of the nodes of one type:
 ```cypher
 MATCH (x:NodeLabel)
 RETURN x;
 ```
-   * x refers to the type of node you want to retrieve. E.g: If you want all the Modules you'd use (x:Module).
-To retrieve all of the relationships of one type use:
+   * x acts like a variable name to reference what you're trying to retrieve. E.g: If you want all the Modules you'd use (x:Module). Now upon returning it, we reference x so it can can reference only the x:Module in the MATCH.
+To retrieve all of the relationships of one type:
 ```cypher
 MATCH (a)-[r:RELATIONSHIP_LABEL]->(b) 
 RETURN a,b,r;
 ```
-   * a and b refer to nodes. You can specify which nodes by adding a :NodeLabel after the a or b. E.g: (a:Module) (b:Room).
+   * a and b act like variable names for nodes. You can specify which nodes by adding a :NodeLabel after the a or b. E.g: (a:Module) (b:Room).
    * r:RELATIONSHIP_LABEL refers to the relationship label you want to retrieve. E.g: If you want all to see all the rooms being used by Modules you'd use [r:THOUGHT_IN].
 
-**Interesting Queries**
-
-To retrieve all of the rooms used and modules being thought on a specific day use (replace "MONDAY" with any other day):
+To retrieve all of the rooms used and modules being thought on a specific day:
 ```cypher
-match (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c) 
-WHERE c.name="MONDAY" and r.day = c.name
+MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c) 
+WHERE c.name="MONDAY" AND r.day = c.name
 RETURN a,b,c,r,t;
 ```
+  * WHERE is a clause that allows you to narrow down your search.
 
-To retrieve all of the 1 hour lessons during the week use:
+To retrieve all of the 1 hour lessons during the week:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c)
+WHERE r.duration = "1"
+RETURN a,r,b,t,c;
+```
 
+To retrieve group C's labs for the week:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c)
+WHERE r.group = "C" AND t.group = r.group
+RETURN a,r,b,t,c;
+```
+
+To retrieve all of the lectures for the week:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c)
+WHERE r.group = "ALL" AND t.group = r.group
+RETURN a,r,b,t,c;
+```
+
+To retrieve all the rooms being used on a specific day:
+```cypher
+MATCH (a)-[r:THOUGHT_ON]->(b)
+WHERE b.name="WEDNESDAY"
+RETURN a,r,b;
+```
 ### Update
-...
 
+To update the property value of a node:
+```cypher
+MATCH (a:NodeLabel)
+WHERE a.propertyName="property value"
+SET a.propertyName="new property value"
+RETURN a;
+```
+  * a is like a variable name for what we're matching.
+  * NodeLabel refers to the Node label. Use node labels mentioned above (under nodes). E.g: Use :Course if updating the course.
+  * a.propertyName refers to a property key, E.g: a.name.
+  * SET will set a new value for the property key.
+
+To update the property value of a relationship:
+```cypher
+MATCH (a)-[r:RELATIONSHIP_LABEL]->(b)
+WHERE a.propertyName="property value" and b.propertyName="property value"
+SET r.propertyValue="new property value"
+RETURN a,b,r;
+```
+  * RELATIONSHIP_LABEL refers to the relationship label. Use relationship labels mentioned above (under relationships). E.g: use :THOUGHT_IN if updating a lessons duration.
+  * a.propertyName and b.propertyName are used to narrow down the relationship between two exact nodes.
+  * Similar to updating a node's property value, we use SET to change the value of a relationships property.
+  
+To add a new property to a node or relationship:
+```cypher
+MATCH (a:NodeLabel)
+WHERE a.propertyName="property value"
+SET a.propertyName2="property value 2"
+RETURN a;
+```
+```cypher
+MATCH (a)-[r:RELATIONSHIP_LABEL]->(b)
+WHERE a.propertyName="property value" and b.propertyName="property value"
+SET r.propertyValue2="property value 2"
+RETURN a,b,r;
+```
+  * Using SET again to simply add a new property key and value.
+
+To rename a node label for all nodes with that label:
+```cypher
+MATCH (a:NodeLabel)
+REMOVE a:NodeLabel
+SET a:NewNodeLabel
+RETURN a;
+```
 ### Delete
-...
+To delete all nodes and relationships:
+```cypher
+MATCH (x)
+DETACH
+DELETE x;
+```
+  * DETACH will remove any relationships that x is bound to
+  * DELETE will delete x. There is some referential integrity that comes into play here, if a node has a relationship, it won't delete hence why using DETACH is necessary.
+  
+To delete all nodes with a specific node label:
+```cypher
+MATCH (x:NodeLabel)
+DETACH
+DELETE x;
+```
+
+To delete a specific node by property key:
+```cypher
+MATCH (x:NodeLabel)
+WHERE x.propertyName = "property value"
+DETACH
+DELETE x;
+```
+
+To delete a specific relationship by relationship label:
+```cypher
+MATCH (a)-[r:RELATIONSHIP_LABEL]->(b)
+DELETE r;
+```
+### Interesting Queries
+
+To retrieve the days and a total of 2 hour lessons on that day:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)
+WHERE r.duration="2"
+RETURN r.day as day, count(r) as No_Of_2hour_lessons
+ORDER BY No_Of_2hour_lessons DESC;
+```
+
+To retrieve the day with the most 1 hour lessons:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)
+WHERE r.duration="1"
+RETURN r.day as day, count(r) as No_Of_1hour_lessons
+ORDER BY No_Of_1hour_lessons DESC LIMIT 1;
+```
+
+To retrieve which room is used the most:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)
+RETURN b, count(r) as TimesUsed
+ORDER by TimesUsed DESC LIMIT 1;
+```
+
+To retrieve Group A's labs and lectures for the week:
+```cypher
+MATCH (a)-[r:THOUGHT_IN]->(b)-[t:THOUGHT_ON]->(c)
+WHERE r.group = "A" and t.group = r.group or r.group="ALL" and t.group=r.group
+RETURN a,b,c,r,t;
+```
 
 ## Conclusion
 ...
