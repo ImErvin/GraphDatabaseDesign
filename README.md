@@ -310,6 +310,16 @@ All of the properties and nodes are extracted directly from the web timetables [
 
 I've learned a lot about graph databases and the power of graph databases while doing this project. I would definitely consider neo4j for future projects, really enjoyed with Neo4j especially when it is presented in such a readable manner like a graph.
 If I were to go back and do this project again with the knowledge I have now, I would write a script in C or Java that would simply parse a file of raw data (mined from the web timetables [7]) and use that extra layer of programming logic to extract node information such as rooms,days,lecturers etc. Once that information is extracted I could build a cypher query to create nodes and to create relationships between them. The output of the script would be similar to my script [8].
+
+## How to run my prototype locally
+  * Install [Neo4j Community Edition](https://neo4j.com/download/community-edition/)
+  * Clone this repository
+  * Locate the cloned repository and unzip Neo4jTT.zip
+  * Open Neo4j and change the database location to the unzipped Neo4jTT folder.
+  * Once your database location is set to \Neo4jTT press Start.
+  * Open http://localhost:7474/.
+  * When prompted to login. Username: neo4j Password: password
+
 ## References
 [1] Neo4j - [why graph databases?](https://neo4j.com/why-graph-databases/)
 
