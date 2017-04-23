@@ -2,7 +2,7 @@
 ###### Contributor(s): Ervin Mamutov
 
 ### The Aim
-My sole aim of this project was to get a better understanding of Graph Databases and Neo4j in particular, all while meeting the requirements on my project spec [9]. In this repository you will find, a zip file with my database prototype and the design document (which you are currently reading). This repository could come in handy for anyone working on a timetabling system with graph databases, or simply starting out with Neo4j and want an example database to work with.
+The sole aim of this project was to get a better understanding of Graph Databases and Neo4j in particular, all while meeting the requirements of my project spec [9]. In this repository you will find, a zip file with my database prototype and the design document (which you are currently reading). This repository could come in handy for anyone working on a timetabling system with graph databases, or simply starting out with Neo4j and want an example database to work with.
 
 ## Graph Databases
 ### What are Graph Databases?
